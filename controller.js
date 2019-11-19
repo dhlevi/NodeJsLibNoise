@@ -31,7 +31,7 @@ const Turbulence = require('./libnoise/operator/turbulence.js');
 
 const { Worker } = require('worker_threads');
 
-var Controller = 
+var Controller =
 {
 	createGenerators: function(modules)
     {
@@ -183,7 +183,7 @@ var Controller =
             // basic model:
             // { id: '', type: '', inputs: [] att: ##}
         }
-        
+
         // Cycle through generators and apply any input modules based on their ID's
         // we can't do it above because generators may be insterted in a random order
         for(var i = 0; i < generators.length; i++)
@@ -200,7 +200,7 @@ var Controller =
                     }
                 }
             }
-            
+
             if(generator.hasOwnProperty('inputs') && generator.hasOwnProperty('sourceModules'))
             {
                 var sourceModules = [];
@@ -237,7 +237,7 @@ var Controller =
 
         return generators;
     },
-    processRequest: function(req) // could use worker to run the process async.
+    processRequest: function(req)
     {
         var worker = new Worker('./requestWorker.js', { workerData: { req }});
         worker.on("error", code => new Error(`Worker error with exit code ${code}`));
@@ -251,7 +251,7 @@ var Controller =
     requests: {}
 };
 
-function callback (data) 
+function callback (data)
 {
     Controller.requests[data.req.id] = data.req;
 

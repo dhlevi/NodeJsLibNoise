@@ -10,27 +10,26 @@ const PImage = require('pureimage');
 const app = express()
 const port = 3000
 
-app.use(express.urlencoded({extended: true})); 
-app.use(express.json());  
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 // "in memory" database. Ideally you'd use a doc store for tracking submitted requests
 // but this is fine for an example
-app.post('/GenerateNoiseMap', function (req, res) 
+app.post('/GenerateNoiseMap', function (req, res)
 {
     var id = uuidv1();
     var lnReq = new LibnoiseRequest(id, req.query, req.body.modules);
     Controller.requests[id] = lnReq;
 
-    // this should be moved into a worker or external process so it doesn't spin forever
     Controller.processRequest(lnReq);
 
     res.json({ id: lnReq.id, status: lnReq.status, link: lnReq.link});
 });
 
-app.get('/GenerateNoiseMapResults/:id', function (req, res) 
+app.get('/GenerateNoiseMapResults/:id', function (req, res)
 {
     var id = req.params.id;
-    if(Controller.requests.hasOwnProperty(id)) 
+    if(Controller.requests.hasOwnProperty(id))
     {
         var libnoiseRequest = Controller.requests[id];
         if(libnoiseRequest.status == 'Complete')
@@ -39,46 +38,46 @@ app.get('/GenerateNoiseMapResults/:id', function (req, res)
             {
                 var img1 = PImage.make(libnoiseRequest.width, libnoiseRequest.height);
                 var ctx = img1.getContext('2d');
-            
+
                 //loop through array and set the pixels. simple b/w heightmap
                 for(var x = 0; x < libnoiseRequest.width; x++)
                 {
                     for(var y = 0; y < libnoiseRequest.height; y++)
                     {
                         var val = libnoiseRequest.results[x][y];
-                        
+
                         //val = val > 1 ? 1 : val < 0 ? 0 : val;
                         // vals will be 0.0 to 1.0, where 1.0 = 255
-            
+
                         ctx.bitmap.setPixelRGBA_i(x, y, 255 * val, 255 * val, 255 * val, 255);
                     }
                 }
-            
+
                 var fileName = uuidv1() + ".png";
                 var tempStream = fs.createWriteStream(fileName);
-                PImage.encodePNGToStream(img1, tempStream).then(() => 
+                PImage.encodePNGToStream(img1, tempStream).then(() =>
                 {
                     // read the temp file back up, then delete it
                     var s = fs.createReadStream(fileName);
-                    
-                    fs.unlink(fileName, (err) => 
+
+                    fs.unlink(fileName, (err) =>
                     {
                         if (err) throw err;
                         console.log(fileName + ' was deleted');
                     });
 
-                    s.on('open', function () 
+                    s.on('open', function ()
                     {
                         res.set('Content-Type', 'image/png');
                         s.pipe(res);
                     });
-            
-                    s.on('error', function () 
+
+                    s.on('error', function ()
                     {
                         res.set('Content-Type', 'text/plain');
                         res.status(404).end('Not found');
                     });
-            
+
                 }).catch((e)=>
                 {
                     console.log("there was an error writing");
@@ -114,7 +113,7 @@ function cleanupRequests()
         var id = keys[i];
         var req = Controller.requests[id];
         var date = new Date(req.date);
-        
+
         date.setMinutes(date.getMinutes() + 30);
 
         if(date < now) delete Controller.requests[id];
