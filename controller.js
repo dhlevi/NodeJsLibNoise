@@ -29,9 +29,7 @@ const Terrace = require('./libnoise/operator/terrace.js');
 const Translate = require('./libnoise/operator/translate.js');
 const Turbulence = require('./libnoise/operator/turbulence.js');
 
-const NoiseFactory = require('./libnoise/noisefactory.js');
-
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+const { Worker } = require('worker_threads');
 
 var Controller = 
 {

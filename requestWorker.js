@@ -1,6 +1,6 @@
 const Controller  = require('./controller.js');
 const NoiseFactory = require('./libnoise/noisefactory.js');
-const { workerData, parentPort, isMainThread } = require('worker_threads');
+const { workerData, parentPort } = require('worker_threads');
 const { req } = workerData;
 
 parentPort.on('message', (msg) => 
