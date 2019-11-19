@@ -1,0 +1,84 @@
+{
+	"modules": 
+	[
+		{
+			"id": "p1in",
+			"type": "perlin",
+			"frequency": 4, 
+			"lacunarity": 2, 
+			"octaves": 22, 
+			"persist": 0.5, 
+			"seed": 20, 
+			"quality": 2
+		},
+		{
+			"id": "p1",
+			"type": "scaleBias",
+			"inputs": "p1in",
+			"scale": 0.625,
+			"bias":  0.375
+		},
+    	{
+    		"id": "p2in",
+			"type": "perlin",
+			"frequency": 4, 
+			"lacunarity": 2, 
+			"octaves": 22, 
+			"persist": 0.5, 
+			"seed": 20, 
+			"quality": 2
+    	},
+    	{
+    		"id": "p2",
+			"type": "Curve",
+			"inputs": "p2in",
+			"controlPoints": [[-2, -1.625], [-1, -1.375], [0, -0.375], [0.0625, 0.125], [0.125, 0.25], [0.25, 1], [0.5, 0.25], [0.75, 0.25], [1, 0.5], [2, 0.5]]
+    	},
+    	{
+    		"id": "min",
+			"type": "min",
+			"inputs": ["p1", "p2"]
+    	},
+    	{
+    		"id": "clamped",
+			"type": "clamp",
+			"inputs": "min"
+    	},
+		{
+			"id": "distort1",
+			"type": "turbulence",
+			"inputs": "clamped",
+			"frequency": 15.25,
+            "power": 0.008,
+            "roughness": 13,
+            "seed": 22
+		},
+		{
+			"id": "distort2",
+			"type": "turbulence",
+			"inputs": "distort1",
+            "frequency": 47.25,
+            "power": 0.002,
+            "roughness": 12,
+            "seed": 23
+		},
+		{
+			"id": "distortFinal",
+			"type": "turbulence",
+			"inputs": "distort2",
+            "frequency": 95.25,
+            "power": 0.0009,
+            "roughness": 11,
+            "seed": 24
+		},
+		{
+			"id": "continentDef",
+			"type": "select",
+			"inputs": ["clamped", "distortFinal"],
+            "control": "clamped",
+            "lowerBound": -0.0375,
+            "upperBound": 1000.0375,
+            "fallOff": 0.0625
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "libnoisejs",
+  "version": "1.0.0",
+  "description": "LibNoise, and other noise, implementations in Javascript",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dylan Hemsworth",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pureimage": "^0.1.6",
+    "uuid": "^3.3.3"
+  }
+}
