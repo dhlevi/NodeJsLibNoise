@@ -9,7 +9,7 @@
   "author": "Dylan Hemsworth",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "pureimage": "^0.1.6",
     "uuid": "^3.3.3"
   }
